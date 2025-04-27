@@ -18,26 +18,46 @@ badd +1 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROY
 badd +1 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/productos.go
 badd +1 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/errors.go
 badd +1 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/middleware.go
-badd +1 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/run.go
+badd +27 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/run.go
 badd +1 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/reviews.go
 badd +1 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/usuarios.go
-badd +0 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/favoritos.go
+badd +1 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/favoritos.go
 badd +8 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/auth.go
 badd +18 .dockerignore
 badd +23 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/Dockerfile
 badd +26 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/fly.toml
 badd +14 /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/.github/workflows/fly-deploy.yml
 badd +2 .gitignore
-badd +2 README.md
+badd +4 README.md
+badd +110 services/postgres/AuthService.go
 argglobal
 %argdel
 set stal=2
 tabnew +setlocal\ bufhidden=wipe
 tabrewind
+edit /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/auth.go
+let s:save_splitbelow = &splitbelow
+let s:save_splitright = &splitright
+set splitbelow splitright
+wincmd _ | wincmd |
+vsplit
+1wincmd h
+wincmd w
+let &splitbelow = s:save_splitbelow
+let &splitright = s:save_splitright
+wincmd t
+let s:save_winminheight = &winminheight
+let s:save_winminwidth = &winminwidth
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+exe 'vert 1resize ' . ((&columns * 30 + 105) / 210)
+exe 'vert 2resize ' . ((&columns * 179 + 105) / 210)
 argglobal
 enew
-file neo-tree\ filesystem\ \[1]
-balt /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/.github/workflows/fly-deploy.yml
+file neo-tree\ filesystem\ \[2]
+balt /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/auth.go
 setlocal foldmethod=manual
 setlocal foldexpr=0
 setlocal foldmarker={{{,}}}
@@ -46,15 +66,7 @@ setlocal foldlevel=0
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-tabnext
-edit README.md
-wincmd t
-let s:save_winminheight = &winminheight
-let s:save_winminwidth = &winminwidth
-set winminheight=0
-set winheight=1
-set winminwidth=0
-set winwidth=1
+wincmd w
 argglobal
 setlocal foldmethod=manual
 setlocal foldexpr=0
@@ -66,12 +78,42 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 2 - ((1 * winheight(0) + 27) / 55)
+let s:l = 6 - ((5 * winheight(0) + 28) / 56)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 2
-normal! 062|
+keepjumps 6
+normal! 014|
+wincmd w
+exe 'vert 1resize ' . ((&columns * 30 + 105) / 210)
+exe 'vert 2resize ' . ((&columns * 179 + 105) / 210)
+tabnext
+edit services/postgres/AuthService.go
+wincmd t
+let s:save_winminheight = &winminheight
+let s:save_winminwidth = &winminwidth
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+argglobal
+balt /share/Unifranz/Semestre\ 7/Programacion\ de\ dispositivos\ moviles/PROYECTO_FINAL/http/auth.go
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 110 - ((40 * winheight(0) + 27) / 55)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 110
+normal! 05|
 tabnext 2
 set stal=1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'

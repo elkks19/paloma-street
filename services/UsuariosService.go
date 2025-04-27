@@ -28,13 +28,14 @@ type UsuariosService interface {
 }
 
 type UsuarioPayload struct {
-	ID              uint32     `json:"id"`
-	Rol             string     `json:"rol"`
-	Nombre          string     `json:"nombre"`
-	Email           string     `json:"email"`
-	EmailVerificado *time.Time `json:"email_verificado"`
-	Password        string     `json:"password"`
-	Permisos        []string   `json:"permisos"`
+	ID                   uint32     `json:"id"`
+	Rol                  string     `json:"rol"`
+	Nombre               string     `json:"nombre"`
+	Email                string     `json:"email"`
+	EmailVerificado      *time.Time `json:"emailVerificado"`
+	Password             string     `json:"password"`
+	PasswordConfirmation string     `json:"passwordConfirmation"`
+	Permisos             []string   `json:"permisos"`
 }
 
 type Usuario struct {
@@ -52,6 +53,7 @@ type Usuario struct {
 	UpdatedAt time.Time  `bun:"updated_at,nullzero"`
 	DeletedAt *time.Time `bun:"deleted_at,soft_delete,nullzero"`
 
+	Sessions []*Session `bun:"rel:has-many,join:id=usuario_id"`
 	Permisos []*Permiso `bun:"m2m:usuario_has_permiso,join:Usuario=Permiso"`
 	Negocios []*Negocio `bun:"m2m:negocio_has_usuario,join:Usuario=Negocio"`
 }

@@ -293,7 +293,7 @@ func GT(n any) RuleSet {
 			}
 		},
 		MessageFunc: func(set RuleSet) string {
-			return fmt.Sprintf("Debe ser mayor a %v", n)
+			return fmt.Sprintf("El campo ser mayor a %v", n)
 		},
 	}
 }
@@ -328,7 +328,7 @@ func Min(n int) RuleSet {
 			return len(str) >= n
 		},
 		MessageFunc: func(set RuleSet) string {
-			return fmt.Sprintf("Debe tener al menos %d caracteres", n)
+			return fmt.Sprintf("El campo debe tener al menos %d caracteres", n)
 		},
 	}
 }

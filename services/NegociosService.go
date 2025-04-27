@@ -33,6 +33,7 @@ type NegocioPayload struct {
 	Tipo        string            `json:"tipo"`
 	Contacto    string            `json:"contacto"`
 	Usuarios    []*UsuarioPayload `json:"usuarios"`
+	Imagen      string            `json:"imagen"`
 }
 
 type Negocio struct {
@@ -46,6 +47,7 @@ type Negocio struct {
 	Calificacion float32        `bun:"calificacion,nullzero"`
 	Tipo         string         `bun:"tipo,nullzero"`
 	Contacto     string         `bun:"contacto,nullzero"`
+	ImagenPath   string         `bun:"imagen_path,nullzero"`
 
 	CreatedAt string `bun:"created_at,nullzero"`
 	UpdatedAt string `bun:"updated_at,nullzero"`

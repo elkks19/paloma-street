@@ -24,7 +24,6 @@ func (s *Server) Serve() error {
 		SigningKey: []byte(env.Get("SESSION_SECRET")),
 		SuccessHandler: s.validTokenHandler,
 		ErrorHandler: s.invalidTokenHandler,
-		TokenLookup: "cookie:Authorization",
 	}))
 
 	s.router.HTTPErrorHandler = s.errorHandler
