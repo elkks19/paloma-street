@@ -9,8 +9,7 @@ CREATE TABLE IF NOT EXISTS negocios(
 	calificacion FLOAT(2) DEFAULT 0,
 	tipo VARCHAR(20) NOT NULL,
 	contacto VARCHAR(8) NULL,
-
-	imagen_path TEXT NULL,
+	imagen_url TEXT NULL,
 
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

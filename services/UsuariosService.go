@@ -55,5 +55,5 @@ type Usuario struct {
 
 	Sessions []*Session `bun:"rel:has-many,join:id=usuario_id"`
 	Permisos []*Permiso `bun:"m2m:usuario_has_permiso,join:Usuario=Permiso"`
-	Negocios []*Negocio `bun:"m2m:negocio_has_usuario,join:Usuario=Negocio"`
+	Negocios []*Negocio `bun:"m2m:negocio_usuarios,join:Usuario=Negocio"`
 }

@@ -19,6 +19,7 @@ type AuthService struct {
 }
 
 func NewAuthService(db *bun.DB) *AuthService {
+	db.RegisterModel((*services.UsuarioHasPermiso)(nil))
 	return &AuthService{
 		db:    db,
 	}

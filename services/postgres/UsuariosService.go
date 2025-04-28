@@ -12,6 +12,7 @@ type UsuariosService struct {
 }
 
 func NewUsuariosService(db *bun.DB) *UsuariosService {
+	db.RegisterModel((*services.NegocioUsuarios)(nil))
 	return &UsuariosService{
 		db: db,
 	}

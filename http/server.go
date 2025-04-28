@@ -6,6 +6,7 @@ import (
 	"proyecto/internal/config/env"
 	"proyecto/internal/db"
 	"proyecto/services"
+	"proyecto/services/filesystem"
 	"proyecto/services/postgres"
 
 	"github.com/labstack/echo/v4"
@@ -45,11 +46,12 @@ func NewServer() *Server {
 		Services: &Services{},
 	}
 
+	is := filesystem.NewImagenesService()
 	s.AuthService = postgres.NewAuthService(s.DB)
 	s.CategoriasService = postgres.NewCategoriasService(s.DB)
 	s.FavoritosService = postgres.NewFavoritosService(s.DB)
-	s.NegociosService = postgres.NewNegociosService(s.DB)
-	s.ProductosService = postgres.NewProductosService(s.DB)
+	s.NegociosService = postgres.NewNegociosService(s.DB, is)
+	s.ProductosService = postgres.NewProductosService(s.DB, is)
 	s.ReviewsService = postgres.NewReviewsService(s.DB)
 	s.UsuariosService = postgres.NewUsuariosService(s.DB)
 

@@ -26,5 +26,5 @@ type Categoria struct {
 	Nombre        string    `bun:"nombre,nullzero"`
 	CreatedAt     time.Time `bun:"created_at,nullzero"`
 
-	Productos []*Producto `bun:"m2m:categoria_has_producto,join:Categoria=Producto"`
+	Productos []*Producto `bun:"m2m:productos_categorias,join:Categoria=Producto"`
 }

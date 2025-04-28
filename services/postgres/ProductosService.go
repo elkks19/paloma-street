@@ -8,12 +8,15 @@ import (
 )
 
 type ProductosService struct {
-	db *bun.DB
+	db              *bun.DB
+	ImagenesService services.ImagenesService
 }
 
-func NewProductosService(db *bun.DB) *ProductosService {
+func NewProductosService(db *bun.DB, is services.ImagenesService) *ProductosService {
+	db.RegisterModel((*services.ProductosCategorias)(nil))
 	return &ProductosService{
-		db: db,
+		db:              db,
+		ImagenesService: is,
 	}
 }
 

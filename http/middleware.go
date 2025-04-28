@@ -1,6 +1,11 @@
 package http
 
-import "github.com/labstack/echo/v4"
+import (
+	"proyecto/internal/config/env"
+
+	"github.com/labstack/echo-jwt/v4"
+	"github.com/labstack/echo/v4"
+)
 
 func (s *Server) validTokenHandler(c echo.Context) {
 
@@ -28,6 +33,14 @@ func (s *Server) Guest(next echo.HandlerFunc) echo.HandlerFunc {
 
 func (s *Server) Authorized(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
+
+		echojwt.JWT(echojwt.Config{
+			ContextKey: "token",
+			SigningKey: []byte(env.Get("SESSION_SECRET")),
+			SuccessHandler: s.validTokenHandler,
+			ErrorHandler: s.invalidTokenHandler,
+		})
+
 		err := next(c)
 		
 		return err

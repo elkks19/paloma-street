@@ -49,5 +49,5 @@ type Review struct {
 
 	CreatedAt time.Time  `bun:"created_at,nullzero"`
 	UpdatedAt time.Time  `bun:"updated_at,nullzero"`
-	DeletedAt *time.Time `bun:"deleted_at,nullzero"`
+	DeletedAt *time.Time `bun:"deleted_at,soft_delete,nullzero"`
 }

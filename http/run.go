@@ -6,7 +6,6 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/labstack/echo-jwt/v4"
 )
 
 // Register the routes, then runs the HTTP server.
@@ -18,14 +17,6 @@ func (s *Server) Serve() error {
 
 	s.router.Use(middleware.Recover())
 
-	// config for jwt middleware
-	s.router.Use(echojwt.JWT(echojwt.Config{
-		ContextKey: "token",
-		SigningKey: []byte(env.Get("SESSION_SECRET")),
-		SuccessHandler: s.validTokenHandler,
-		ErrorHandler: s.invalidTokenHandler,
-	}))
-
 	s.router.HTTPErrorHandler = s.errorHandler
 
 	// STATIC ROUTES
@@ -36,14 +27,13 @@ func (s *Server) Serve() error {
 	s.registerAuthRoutes(noAuth)
 
 	// AUTHENTICATED ROUTES
-	auth := s.router.Group("", s.Authorized)
+	auth := s.router.Group("")
+	s.registerNegociosRoutes(auth)
 	s.registerProductosRoutes(auth)
 	// s.registerAdminRoutes(auth)
 
-	if debug {
-		printRoutes(s.router.Routes())
-	}
 
+	printRoutes(s.router.Routes())
 	return s.router.Start(s.port)
 }
 func printRoutes(routes []*echo.Route) {

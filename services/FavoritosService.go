@@ -31,5 +31,5 @@ type Favorito struct {
 
 	CreatedAt string `bun:"created_at,nullzero"`
 	UpdatedAt string `bun:"updated_at,nullzero"`
-	DeletedAt string `bun:"deleted_at,nullzero"`
+	DeletedAt string `bun:"deleted_at,soft_delete,nullzero"`
 }

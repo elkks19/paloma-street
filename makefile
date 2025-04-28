@@ -26,3 +26,4 @@ again: build
 	@./$(EXEC_FILE)
 
 include ./build/migrations.mk
+include ./build/sanbox.mk

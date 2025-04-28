@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"proyecto/pkg/types"
 
 	"github.com/uptrace/bun"
 )
@@ -28,37 +29,37 @@ type NegocioPayload struct {
 	ID          uint32            `json:"id"`
 	Nombre      string            `json:"nombre"`
 	Descripcion string            `json:"descripcion"`
-	Ubicacion   map[string]any    `json:"ubicacion"`
-	Menu        map[string]any    `json:"menu"`
+	Ubicacion   types.JSONMap     `json:"ubicacion"`
+	Menu        types.JSONMap     `json:"menu"`
 	Tipo        string            `json:"tipo"`
 	Contacto    string            `json:"contacto"`
 	Usuarios    []*UsuarioPayload `json:"usuarios"`
-	Imagen      string            `json:"imagen"`
+	ImagenB64 string            `json:"imagen"`
 }
 
 type Negocio struct {
 	bun.BaseModel `bun:"table:negocios"`
 	ID            uint32 `bun:"id,pk,autoincrement"`
 
-	Nombre       string         `bun:"nombre,nullzero"`
-	Descripcion  string         `bun:"descripcion,nullzero"`
-	Ubicacion    map[string]any `bun:"ubicacion,type:jsonb,json_use_number"`
-	Menu         map[string]any `bun:"menu,type:jsonb,json_use_number"`
-	Calificacion float32        `bun:"calificacion,nullzero"`
-	Tipo         string         `bun:"tipo,nullzero"`
-	Contacto     string         `bun:"contacto,nullzero"`
-	ImagenPath   string         `bun:"imagen_path,nullzero"`
+	Nombre       string        `bun:"nombre,nullzero"`
+	Descripcion  string        `bun:"descripcion,nullzero"`
+	Ubicacion    types.JSONMap `bun:"ubicacion,type:jsonb,json_use_number"`
+	Menu         types.JSONMap `bun:"menu,type:jsonb,json_use_number"`
+	Calificacion float32       `bun:"calificacion,nullzero"`
+	Tipo         string        `bun:"tipo,nullzero"`
+	Contacto     string        `bun:"contacto,nullzero"`
+	ImagenUrl    string        `bun:"imagen_url,nullzero"`
 
 	CreatedAt string `bun:"created_at,nullzero"`
 	UpdatedAt string `bun:"updated_at,nullzero"`
-	DeletedAt string `bun:"deleted_at,nullzero"`
+	DeletedAt string `bun:"deleted_at,soft_delete,nullzero"`
 
 	Productos []*Producto `bun:"rel:has-many,join:id=negocio_id"`
-	Usuarios  []*Usuario  `bun:"m2m:negocio_has_usuario,join:Negocio=Usuario"`
+	Usuarios  []*Usuario  `bun:"m2m:negocio_usuarios,join:Negocio=Usuario"`
 }
 
 type NegocioUsuarios struct {
-	bun.BaseModel `bun:"table:negocio_has_usuario"`
+	bun.BaseModel `bun:"table:negocio_usuarios"`
 	NegocioID     uint32   `bun:"negocio_id,pk,nullzero"`
 	Negocio       *Negocio `bun:"rel:belongs-to,join:negocio_id=id"`
 	UsuarioID     uint32   `bun:"usuario_id,pk,nullzero"`

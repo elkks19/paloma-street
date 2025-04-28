@@ -48,10 +48,11 @@ type Producto struct {
 
 	CreatedAt time.Time  `bun:"created_at,nullzero"`
 	UpdatedAt time.Time  `bun:"updated_at,nullzero"`
-	DeletedAt *time.Time `bun:"deleted_at,nullzero"`
+	DeletedAt *time.Time `bun:"deleted_at,soft_delete,nullzero"`
 
-	Categorias []*Categoria `bun:"m2m:categoria_has_producto,join:Producto=Categoria"`
-	Reviews    []*Review    `bun:"rel:has-many,join:id=producto_id"`
+	Categorias []*Categoria      `bun:"m2m:productos_categorias,join:Producto=Categoria"`
+	Reviews    []*Review         `bun:"rel:has-many,join:id=producto_id"`
+	Imagenes   []*ProductoImagen `bun:"rel:has-many,join:id=producto_id"`
 }
 
 type ProductosCategorias struct {
