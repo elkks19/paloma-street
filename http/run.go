@@ -33,14 +33,12 @@ func (s *Server) Serve() error {
 
 	// NOT AUTHENTICATED ROUTES
 	noAuth := s.router.Group("")
-	noAuth.Use()
-	// s.registerAuthRoutes(noAuth)
+	s.registerAuthRoutes(noAuth)
 
 	// AUTHENTICATED ROUTES
-	auth := s.router.Group("")
-	auth.Use()
+	auth := s.router.Group("", s.Authorized)
+	s.registerProductosRoutes(auth)
 	// s.registerAdminRoutes(auth)
-	// s.registerProductosRoutes(auth)
 
 	if debug {
 		printRoutes(s.router.Routes())

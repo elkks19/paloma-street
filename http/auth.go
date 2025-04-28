@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (s *Server) registerAuthRoute(r *echo.Group) {
+func (s *Server) registerAuthRoutes(r *echo.Group) {
 	r.POST("/register", s.handleRegister)
 	r.POST("/login", s.handleLogin)
 	r.POST("/logout", s.handleLogout)
