@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"encoding/json"
 	"proyecto/services"
 
 	"github.com/uptrace/bun"
@@ -38,11 +39,14 @@ func (s *NegociosService) Negocio(ctx context.Context, id uint32) (*services.Neg
 
 func (s *NegociosService) Negocios(ctx context.Context, offset int, limit int) ([]*services.Negocio, error) {
 	negocios := new([]*services.Negocio)
-	err := s.db.NewSelect().
-		Model(negocios).
-		Offset(offset).
-		Limit(limit).
-		Scan(ctx)
+	query := s.db.NewSelect().
+		Model(negocios)
+	
+	if limit > 0 && offset >= 0 {
+		query = query.Limit(limit).Offset(offset)
+	}
+
+	err := query.Scan(ctx)
 
 	return *negocios, err
 }
@@ -51,15 +55,23 @@ func (s *NegociosService) Create(ctx context.Context, negocio *services.NegocioP
 	nDB := &services.Negocio{
 		Nombre:      negocio.Nombre,
 		Descripcion: negocio.Descripcion,
-		Ubicacion:   negocio.Ubicacion,
-		Menu:        negocio.Menu,
 		Tipo:        negocio.Tipo,
 		Contacto:    negocio.Contacto,
 		// TODO: GET THIS TO THE FILESYSTEM WITH THE IMAGENSERVICE
 		// ImagenUrl:   negocio.,
 	}
 
-	err := s.db.NewInsert().
+	err := json.Unmarshal(negocio.Ubicacion, &nDB.Ubicacion)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(negocio.Menu, &nDB.Menu)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.db.NewInsert().
 		Model(nDB).
 		Returning("*").
 		Scan(ctx)
@@ -73,15 +85,23 @@ func (s *NegociosService) Update(ctx context.Context, negocio *services.NegocioP
 		ID:          negocio.ID,
 		Nombre:      negocio.Nombre,
 		Descripcion: negocio.Descripcion,
-		Ubicacion:   negocio.Ubicacion,
-		Menu:        negocio.Menu,
 		Tipo:        negocio.Tipo,
 		Contacto:    negocio.Contacto,
 		// TODO: GET THIS TO THE FILESYSTEM WITH THE IMAGENSERVICE
 		// ImagenUrl:   negocio.ImagenUrl,
 	}
 
-	err := s.db.NewUpdate().
+	err := json.Unmarshal(negocio.Ubicacion, &nDB.Ubicacion)
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(negocio.Menu, &nDB.Menu)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.db.NewUpdate().
 		Model(nDB).
 		WherePK().
 		Returning("*").

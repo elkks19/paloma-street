@@ -29,12 +29,12 @@ type NegocioPayload struct {
 	ID          uint32            `json:"id"`
 	Nombre      string            `json:"nombre"`
 	Descripcion string            `json:"descripcion"`
-	Ubicacion   types.JSONMap     `json:"ubicacion"`
-	Menu        types.JSONMap     `json:"menu"`
+	Ubicacion   []byte            `json:"ubicacion"`
+	Menu        []byte            `json:"menu"`
 	Tipo        string            `json:"tipo"`
 	Contacto    string            `json:"contacto"`
 	Usuarios    []*UsuarioPayload `json:"usuarios"`
-	ImagenB64 string            `json:"imagen"`
+	ImagenB64   string            `json:"imagen"`
 }
 
 type Negocio struct {

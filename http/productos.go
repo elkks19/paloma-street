@@ -7,8 +7,8 @@ import (
 )
 
 func (s *Server) registerProductosRoutes(r *echo.Group) {
-	r.GET("/productos", s.handleIndexProductos)
-	r.POST("/productos", s.handleStoreProducto)
+	r.GET("/productos/:negocio", s.handleIndexProductos)
+	r.POST("/productos/:negocio", s.handleStoreProducto)
 	r.GET("/productos/:id", s.handleShowProducto)
 	r.PUT("/productos/:id", s.handleUpdateProducto)
 	r.DELETE("/productos/:id", s.handleDeleteProducto)

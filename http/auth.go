@@ -14,6 +14,13 @@ func (s *Server) registerAuthRoutes(r *echo.Group) {
 	r.POST("/logout", s.handleLogout)
 }
 
+var registerSchema = v.Schema {
+	"nombre": v.Rules(v.Required, v.Min(2), v.Max(255)),
+	"email": v.Rules(v.Required, v.Email, v.Min(2), v.Max(255)),
+	"password": v.Rules(v.Required, v.Min(8), v.Max(255)),
+	"passwordConfirmation": v.Rules(v.Required, v.Min(8), v.Max(255)),
+}
+
 func (s *Server) handleRegister(c echo.Context) error {
 	// Parse the request body into a struct
 	up := new(services.UsuarioPayload)
@@ -22,14 +29,7 @@ func (s *Server) handleRegister(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, "Invalid request body")
 	}
 
-	schema := v.Schema {
-		"nombre": v.Rules(v.Required, v.Min(2), v.Max(255)),
-		"email": v.Rules(v.Required, v.Email, v.Min(2), v.Max(255)),
-		"password": v.Rules(v.Required, v.Min(8), v.Max(255)),
-		"passwordConfirmation": v.Rules(v.Required, v.Min(8), v.Max(255)),
-	}
-
-	errors, valid := v.Validate(up, schema)
+	errors, valid := v.Validate(up, registerSchema)
 	if !valid {
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, errors)
 	}
