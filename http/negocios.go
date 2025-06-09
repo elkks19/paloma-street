@@ -79,16 +79,7 @@ func (s *Server) handleStoreNegocio(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	err = echo.FormFieldBinder(c).
-		MustString("nombre", &np.Nombre).
-		MustString("descripcion", &np.Descripcion).
-		MustJSONUnmarshaler("ubicacion", &np.Ubicacion).
-		JSONUnmarshaler("menu", &np.Menu).
-		MustString("tipo", &np.Tipo).
-		String("contacto", &np.Contacto).
-		String("imagen", &np.ImagenB64).
-		BindError()
-
+	err = c.Bind(np)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request")
 	}
