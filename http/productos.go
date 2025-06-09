@@ -35,6 +35,7 @@ func (s *Server) handleShowProducto(c echo.Context) error {
 }
 
 func (s *Server) handleStoreProducto(c echo.Context) error {
+
 	return nil
 }
 

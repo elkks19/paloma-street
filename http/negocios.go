@@ -71,15 +71,7 @@ func (s *Server) handleShowNegocio(c echo.Context) error {
 func (s *Server) handleStoreNegocio(c echo.Context) error {
 	np := new(services.NegocioPayload)
 
-	err := echo.PathParamsBinder(c).
-		MustUint32("id", &np.ID).
-		BindError()
-
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err)
-	}
-
-	err = c.Bind(np)
+	err := c.Bind(np)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request")
 	}
@@ -99,9 +91,45 @@ func (s *Server) handleStoreNegocio(c echo.Context) error {
 }
 
 func (s *Server) handleUpdateNegocio(c echo.Context) error {
-	return nil
+	np := new(services.NegocioPayload)
+
+	err := echo.PathParamsBinder(c).
+		MustUint32("id", &np.ID).
+		BindError()
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	err = c.Bind(np)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid request")
+	}
+
+	nDB, err := s.NegociosService.Update(c.Request().Context(), np)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return echo.NewHTTPError(http.StatusNotFound, "Negocio not found")
+		}
+		return echo.NewHTTPError(http.StatusInternalServerError, "Invalid request")
+	}
+
+	// Return the updated negocio
+	return c.JSON(http.StatusCreated, map[string]any{
+		"negocio": nDB,
+	})
 }
 
 func (s *Server) handleDeleteNegocio(c echo.Context) error {
-	return nil
+	np := new(services.NegocioPayload)
+	err := echo.PathParamsBinder(c).
+		MustUint32("id", &np.ID).
+		BindError()
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err)
+	}
+
+	err = s.NegociosService.Delete(c.Request().Context(), np)
+	return err
 }
