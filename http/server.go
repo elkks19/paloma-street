@@ -1,8 +1,6 @@
 package http
 
 import (
-	"context"
-	"log"
 	"proyecto/internal/config/env"
 	"proyecto/internal/db"
 	"proyecto/services"
@@ -25,10 +23,8 @@ type Services struct {
 
 type Server struct {
 	router *echo.Echo
-	logger *log.Logger
 	DB     *bun.DB
 	port   string
-	ctx    context.Context
 	*Services
 }
 
