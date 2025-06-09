@@ -24,7 +24,7 @@ type ReviewsService interface {
 	Update(ctx context.Context, review *ReviewPayload) (*Review, error)
 
 	// DeleteReview deletes a review for a given user and negocio.
-	Delete(ctx context.Context, review *ReviewPayload) (*Review, error)
+	Delete(ctx context.Context, id uint32) error
 }
 
 type ReviewPayload struct {
@@ -38,11 +38,11 @@ type ReviewPayload struct {
 type Review struct {
 	bun.BaseModel `bun:"table:reviews"`
 
-	ID        uint32   `bun:"id,pk,autoincrement"`
-	UsuarioID uint32   `bun:"usuario_id,nullzero"`
-	Usuario   *Usuario `bun:"rel:belongs-to,join:usuario_id=id"`
-	ProductoID uint32   `bun:"producto_id,nullzero"`
-	Producto  *Producto `bun:"rel:belongs-to,join:producto_id=id"`
+	ID         uint32    `bun:"id,pk,autoincrement"`
+	UsuarioID  uint32    `bun:"usuario_id,nullzero"`
+	Usuario    *Usuario  `bun:"rel:belongs-to,join:usuario_id=id"`
+	ProductoID uint32    `bun:"producto_id,nullzero"`
+	Producto   *Producto `bun:"rel:belongs-to,join:producto_id=id"`
 
 	Contenido    string `bun:"contenido,nullzero"`
 	Calificacion uint32 `bun:"calificacion,nullzero"`

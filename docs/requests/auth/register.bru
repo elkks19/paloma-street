@@ -1,0 +1,20 @@
+meta {
+  name: register
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{host}}/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nombre": "rafael fabiani",
+    "email": "rafafabiani1909@gmail.com",
+    "password": "rafa1909",
+    "passwordConfirmation": "rafa1909"
+  }
+}

@@ -35,13 +35,16 @@ func (s *Server) errorHandler(err error, c echo.Context) {
 		case http.StatusUnprocessableEntity:
 			switch e := he.Message.(type) {
 				case validate.Errors:
-					c.JSON(code, e)
+					c.JSON(code, map[string]any {
+						"errors": e,
+					})
 					return
 
 				case string:
 					c.JSON(code, validate.Errors{
-						"_error": []string{e},
+						"errors": []string{e},
 					})
+					return
 			}
 
 		case http.StatusUnauthorized:

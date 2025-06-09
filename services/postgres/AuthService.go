@@ -15,20 +15,20 @@ import (
 )
 
 type AuthService struct {
-	db    *bun.DB
+	db *bun.DB
 }
 
 func NewAuthService(db *bun.DB) *AuthService {
 	db.RegisterModel((*services.UsuarioHasPermiso)(nil))
 	return &AuthService{
-		db:    db,
+		db: db,
 	}
 }
 
-func (s *AuthService) Register(ctx context.Context, u *services.UsuarioPayload) (*services.Session, error) {
+func (s *AuthService) Register(ctx context.Context, up *services.UsuarioPayload) (*services.Session, error) {
 	exists, err := s.db.NewSelect().
-		Model(u).
-		Where("email = ?", u.Email).
+		Model((*services.Usuario)(nil)).
+		Where("email = ?", up.Email).
 		Exists(ctx)
 
 	if exists {
@@ -39,7 +39,6 @@ func (s *AuthService) Register(ctx context.Context, u *services.UsuarioPayload) 
 		return nil, err
 	}
 
-
 	// if there's no user with that email, we can create a new one
 	b := env.Get("BCRYPT_ROUNDS")
 	bcryptRounds, err := strconv.Atoi(b)
@@ -47,18 +46,18 @@ func (s *AuthService) Register(ctx context.Context, u *services.UsuarioPayload) 
 		panic("ENV VARIABLE BCRYPT_ROUNDS IS NOT AN INTEGER")
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcryptRounds)
+	hash, err := bcrypt.GenerateFromPassword([]byte(up.Password), bcryptRounds)
 	if err != nil {
 		return nil, err
 	}
 
-	u.Password = string(hash)
+	up.Password = string(hash)
 
 	dbU := &services.Usuario{
-		RolID:      1,
-		Nombre:     u.Nombre,
-		Email:      u.Email,
-		Password:   u.Password,
+		RolID:    1,
+		Nombre:   up.Nombre,
+		Email:    up.Email,
+		Password: up.Password,
 	}
 
 	err = s.db.NewInsert().
@@ -70,7 +69,7 @@ func (s *AuthService) Register(ctx context.Context, u *services.UsuarioPayload) 
 	}
 
 	// create a session for the user
-	ses, err := s.Attempt(ctx, u)
+	ses, err := s.Attempt(ctx, up)
 
 	return ses, err
 }
@@ -88,7 +87,7 @@ func (s *AuthService) Attempt(ctx context.Context, u *services.UsuarioPayload) (
 		}
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(u.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(uDB.Password), []byte(u.Password))
 	if err != nil {
 		return nil, services.ErrWrongPassword
 	}
@@ -99,13 +98,13 @@ func (s *AuthService) Attempt(ctx context.Context, u *services.UsuarioPayload) (
 		panic("ENV VARIABLE SESSION_EXPIRATION_HRS IS NOT AN INTEGER")
 	}
 
-	claims := &services.CustomClaims {
+	claims := &services.CustomClaims{
 		jwt.RegisteredClaims{
-			Issuer: env.Get("APP_NAME"),
-			Subject: u.Nombre,
+			Issuer:    env.Get("APP_NAME"),
+			Subject:   u.Nombre,
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(expirationHrs) * time.Hour)),
 			NotBefore: jwt.NewNumericDate(time.Now()),
-			IssuedAt: jwt.NewNumericDate(time.Now()),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
 		uDB,
 	}
@@ -114,9 +113,8 @@ func (s *AuthService) Attempt(ctx context.Context, u *services.UsuarioPayload) (
 
 	ses := &services.Session{
 		UsuarioID: &u.ID,
-		Token: token.Raw,
+		Token:     token.Raw,
 	}
-
 
 	return ses, err
 }

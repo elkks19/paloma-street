@@ -115,7 +115,7 @@ var Required = RuleSet{
 			return false
 		}
 		str, ok := rule.FieldValue.(string)
-		if ok {
+		if !ok {
 			return false
 		}
 		return len(str) > 0

@@ -79,7 +79,7 @@ func (s *Server) handleStoreNegocio(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err)
 	}
 
-	err = echo.QueryParamsBinder(c).
+	err = echo.FormFieldBinder(c).
 		MustString("nombre", &np.Nombre).
 		MustString("descripcion", &np.Descripcion).
 		MustJSONUnmarshaler("ubicacion", &np.Ubicacion).

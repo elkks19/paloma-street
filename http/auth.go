@@ -16,8 +16,8 @@ func (s *Server) registerAuthRoutes(r *echo.Group) {
 
 func (s *Server) handleRegister(c echo.Context) error {
 	// Parse the request body into a struct
-	u := new(services.UsuarioPayload)
-	err := c.Bind(u)
+	up := new(services.UsuarioPayload)
+	err := c.Bind(up)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, "Invalid request body")
 	}
@@ -29,18 +29,18 @@ func (s *Server) handleRegister(c echo.Context) error {
 		"passwordConfirmation": v.Rules(v.Required, v.Min(8), v.Max(255)),
 	}
 
-	errors, valid := v.Validate(u, schema)
+	errors, valid := v.Validate(up, schema)
 	if !valid {
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, errors)
 	}
 
 	// Validate the password and password confirmation
-	if u.Password != u.PasswordConfirmation {
+	if up.Password != up.PasswordConfirmation {
 		errors.Add("password", "Las contraseñas no coinciden")
 		return echo.NewHTTPError(http.StatusUnprocessableEntity, errors)
 	}
 
-	ses, err := s.AuthService.Register(c.Request().Context(), u)
+	ses, err := s.AuthService.Register(c.Request().Context(), up)
 	if err != nil {
 		if err == services.ErrEmailExists || err == services.ErrWrongPassword {
 			errors.Add("email", "Credenciales invalida")
@@ -49,16 +49,54 @@ func (s *Server) handleRegister(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, map[string]any {
-		"usuario": u,
+		"usuario": up,
 		"token": ses.Token,
 	})
 }
 
 func (s *Server) handleLogin(c echo.Context) error {
-	return nil
+	// Parse the request body into a struct
+	up := new(services.UsuarioPayload)
+	err := c.Bind(up)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, "Invalid request body")
+	}
+
+	schema := v.Schema {
+		"email": v.Rules(v.Required, v.Email, v.Min(2), v.Max(255)),
+		"password": v.Rules(v.Required, v.Min(8), v.Max(255)),
+	}
+
+	errors, valid := v.Validate(up, schema)
+	if !valid {
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, errors)
+	}
+
+	ses, err := s.AuthService.Attempt(c.Request().Context(), up)
+	if err != nil {
+		if err == services.ErrWrongPassword {
+			errors.Add("password", "Contraseña incorrecta")
+			return echo.NewHTTPError(http.StatusUnprocessableEntity, errors)
+		}
+
+		errors.Add("email", "Credenciales invalida")
+		return echo.NewHTTPError(http.StatusUnprocessableEntity, errors)
+	}
+
+	return c.JSON(http.StatusOK, map[string]any {
+		"usuario": up,
+		"token": ses.Token,
+	})
 }
 
 func (s *Server) handleLogout(c echo.Context) error {
+	// token := c.Response().Header().Get("Authorization")
+	// if token == "" {
+	// 	return echo.NewHTTPError(http.StatusUnauthorized, "No token provided")
+	// }
+	//
+	// err := s.AuthService.Logout(c.Request().Context(), token)
+
 	return nil
 }
 

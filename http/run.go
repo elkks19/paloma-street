@@ -30,7 +30,7 @@ func (s *Server) Serve() error {
 	auth := s.router.Group("")
 	s.registerNegociosRoutes(auth)
 	s.registerProductosRoutes(auth)
-	// s.registerAdminRoutes(auth)
+	s.registerFavoritosRoutes(auth)
 
 
 	printRoutes(s.router.Routes())
